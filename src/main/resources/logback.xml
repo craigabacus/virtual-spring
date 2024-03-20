@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--Allow JMX changes to logging levels-->
+    <!-- jmxConfigurator/ no longer works -->
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%file:%line] %msg%n</pattern>
+        </encoder>
+        <file>/var/log/vs/vs.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/vs/archive/vs.%d.log.gz</fileNamePattern>
+            <maxHistory>366</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Mitigates performance implications as outlined in http://www.slf4j.org/legacy.html#jul-to-slf4j -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!--<logger name="com.asi" level="DEBUG"/>-->  <!-- this is overriden by Spring Boot setting in application.properties -->
+
+    <root level="WARN"> <!-- this is overriden by Spring Boot setting in application.properties -->
+        <!-- <appender-ref ref="CONSOLE" /> -->  <!-- commented out for live. live runs as service so console logging not helpful -->
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
